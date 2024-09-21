@@ -24,8 +24,14 @@ const menteeProfileSchema = new mongoose.Schema({
     required: true
   },
   interestedSubjects: {
-    type: String,
-    required: true
+    type: [String],  // Changed to an array of strings
+    required: true,
+    validate: {
+      validator: function(v) {
+        return v.length > 0;  // Ensure at least one subject is selected
+      },
+      message: 'At least one interested subject is required'
+    }
   },
   profileCompleted: {
     type: Boolean,

@@ -73,4 +73,9 @@ export const updateMenteeProfile = async (profileData) => {
   return response.data;
 };
 
+export const getMatchingMentors = async () => {
+  const response = await api.get('/match/mentors');
+  return response.data;
+};
+
 export default api;

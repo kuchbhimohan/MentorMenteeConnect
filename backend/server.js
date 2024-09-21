@@ -7,6 +7,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const mentorProfileRoutes = require('./routes/mentorProfileRoutes');
 const menteeProfileRoutes = require('./routes/menteeProfileRoutes');
+const matchRoutes = require('./routes/matchRoutes');
 
 const app = express();
 
@@ -26,6 +27,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/mentor/profile', mentorProfileRoutes);
 app.use('/api/mentee/profile', menteeProfileRoutes);
+app.use('/api/match', matchRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

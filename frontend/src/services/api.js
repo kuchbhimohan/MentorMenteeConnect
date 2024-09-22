@@ -77,5 +77,9 @@ export const getMatchingMentors = async () => {
   const response = await api.get('/match/mentors');
   return response.data;
 };
-
+// In your api service file (e.g., api.js)
+export const sendConnectionRequest = async (teacherId) => {
+  const response = await api.post(`/mentor-connections/request/${teacherId}`);
+  return response.data;
+};
 export default api;

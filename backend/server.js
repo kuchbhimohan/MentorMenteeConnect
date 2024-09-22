@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const mentorProfileRoutes = require('./routes/mentorProfileRoutes');
 const menteeProfileRoutes = require('./routes/menteeProfileRoutes');
 const matchRoutes = require('./routes/matchRoutes');
+const mentorConnectionRoutes = require('./routes/mentorConnectionRoutes');
 
 const app = express();
 
@@ -28,6 +29,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/mentor/profile', mentorProfileRoutes);
 app.use('/api/mentee/profile', menteeProfileRoutes);
 app.use('/api/match', matchRoutes);
+app.use('/api/mentor-connections', mentorConnectionRoutes);
+
 
 
 const PORT = process.env.PORT || 5000;

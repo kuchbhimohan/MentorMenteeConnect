@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { getMatchingMentors } from '../../../services/api';
+import React, { useState, useEffect, useCallback } from 'react';
+import { getMatchingMentors, sendConnectionRequest } from '../../../services/api';
 import TeacherProfilePopup from './TeacherProfilePopup';
 import '../../../styles/mentee_dashboard/InterestedTeachers.css';
 
@@ -24,13 +24,24 @@ const InterestedTeachers = () => {
     fetchMatchingMentors();
   }, []);
 
-  const handleTeacherClick = (teacher) => {
+  const handleTeacherClick = useCallback((teacher) => {
     setSelectedTeacher(teacher);
-  };
+  }, []);
 
-  const handleClosePopup = () => {
+  const handleClosePopup = useCallback(() => {
     setSelectedTeacher(null);
-  };
+  }, []);
+
+  const handleConnectRequest = useCallback(async (teacherId) => {
+    try {
+      await sendConnectionRequest(teacherId);
+      alert('Connection request sent successfully!');
+      handleClosePopup();
+    } catch (error) {
+      console.error('Error sending connection request:', error);
+      alert('Failed to send connection request. Please try again.');
+    }
+  }, [handleClosePopup]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -54,6 +65,7 @@ const InterestedTeachers = () => {
         <TeacherProfilePopup 
           teacher={selectedTeacher} 
           onClose={handleClosePopup}
+          onConnect={handleConnectRequest}
         />
       )}
     </div>

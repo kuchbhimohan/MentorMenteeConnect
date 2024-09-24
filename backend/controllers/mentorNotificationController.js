@@ -1,6 +1,7 @@
 const MentorNotification = require('../models/MentorNotifications');
 const ConnectedMentees = require('../models/ConnectedMentees');
-
+const MenteeNotification = require('../models/MenteeNotification');
+const ConnectedMentors = require('../models/ConnectedMentors');
 exports.createConnectionRequest = async (req, res) => {
   try {
     const menteeId = req.user._id; // Assuming the mentee's ID is available in req.user
@@ -69,29 +70,47 @@ exports.updateNotificationStatus = async (req, res) => {
       return res.status(400).json({ message: 'Invalid action' });
     }
 
-    const notification = await MentorNotification.findById(notificationId);
+    const notification = await MentorNotification.findById(notificationId).populate('mentor', 'name');
 
     if (!notification) {
       return res.status(404).json({ message: 'Notification not found' });
     }
 
+    const mentorName = notification.mentor.name;
+
     if (action === 'accepted') {
-      // Add mentee to ConnectedMentees
-      const connectedMentees = await ConnectedMentees.findOneAndUpdate(
-        { mentor: notification.mentor },
-        { $addToSet: { mentees: notification.mentee } },
+      // Add mentor to ConnectedMentors
+      await ConnectedMentors.findOneAndUpdate(
+        { mentee: notification.mentee },
+        { $addToSet: { mentors: notification.mentor } },
         { upsert: true, new: true }
       );
 
-      // Delete the notification
+      // Create notification for mentee
+      await MenteeNotification.create({
+        mentor: notification.mentor,
+        mentee: notification.mentee,
+        message: `${mentorName} has accepted your connection request.`,
+        activeNotification: true
+      });
+
+      // Delete the original notification
       await MentorNotification.findByIdAndDelete(notificationId);
 
-      res.status(200).json({ message: 'Connection request accepted and mentee added to connected list' });
+      res.status(200).json({ message: 'Connection request accepted and mentee notified' });
     } else if (action === 'rejected') {
-      // Delete the notification
+      // Create notification for mentee
+      await MenteeNotification.create({
+        mentor: notification.mentor,
+        mentee: notification.mentee,
+        message: `${mentorName} has rejected your connection request.`,
+        activeNotification: true
+      });
+
+      // Delete the original notification
       await MentorNotification.findByIdAndDelete(notificationId);
 
-      res.status(200).json({ message: 'Connection request rejected' });
+      res.status(200).json({ message: 'Connection request rejected and mentee notified' });
     } else if (action === 'dismissed') {
       // Update the notification to be inactive
       notification.activeNotification = false;

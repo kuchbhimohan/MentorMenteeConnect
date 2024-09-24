@@ -102,4 +102,19 @@ export const getConnectedStudents = async () => {
   const response = await api.get('/connected-students');
   return response.data;
 };
+
+export const getMenteeNotifications = async () => {
+  const response = await api.get('/mentee-notifications');
+  return response.data;
+};
+
+export const markNotificationAsRead = async (notificationId) => {
+  const response = await api.put(`/mentee-notifications/${notificationId}/read`);
+  return response.data;
+};
+
+export const getConnectedMentors = async () => {
+  const response = await api.get('/connected-mentors');
+  return response.data;
+};
 export default api;

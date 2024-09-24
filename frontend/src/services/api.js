@@ -77,9 +77,29 @@ export const getMatchingMentors = async () => {
   const response = await api.get('/match/mentors');
   return response.data;
 };
-// In your api service file (e.g., api.js)
-export const sendConnectionRequest = async (teacherId) => {
-  const response = await api.post(`/mentor-connections/request/${teacherId}`);
+
+export const sendConnectionRequest = async (mentorId) => {
+  try {
+    const response = await api.post(`/notifications/request/${mentorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error sending connection request:', error);
+    throw error;
+  }
+};
+
+export const getNotificationsOfMentor = async () => {
+  const response = await api.get('/notifications/mentor');
+  return response.data;
+};
+
+export const updateNotificationStatus = async (notificationId, action) => {
+  const response = await api.put(`/notifications/${notificationId}`, { action });
+  return response.data;
+};
+
+export const getConnectedStudents = async () => {
+  const response = await api.get('/connected-students');
   return response.data;
 };
 export default api;

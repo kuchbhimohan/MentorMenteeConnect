@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const notificationSchema = new mongoose.Schema({
-  recipient: {
+const mentorNotificationSchema = new mongoose.Schema({
+  mentor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  sender: {
+  mentee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
@@ -21,7 +21,7 @@ const notificationSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'dismissed', 'deleted'],
+    enum: ['pending', 'accepted', 'rejected'],
     default: 'pending'
   },
   createdAt: {
@@ -30,6 +30,6 @@ const notificationSchema = new mongoose.Schema({
   }
 });
 
-const Notification = mongoose.model('Notification', notificationSchema);
+const MentorNotification = mongoose.model('MentorNotification', mentorNotificationSchema);
 
-module.exports = Notification;
+module.exports = MentorNotification;

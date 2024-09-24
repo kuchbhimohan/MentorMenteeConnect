@@ -1,8 +1,10 @@
 import React from 'react';
 import InterestedTeachers from './InterestedTeachers';
+import '../../../styles/mentee_dashboard/MenteeDashboard.css'; // Make sure to create this CSS file
+
 const Stats = () => {
   return (
-    <div>
+    <div className="stats-container">
       <h2>Your Learning Stats</h2>
       <div className="stats-grid">
         <div className="stat-card">
@@ -30,6 +32,9 @@ const Stats = () => {
           <p className="stat-value">85%</p>
         </div>
       </div>
+      <br></br>
+      <br></br>
+
       <InterestedTeachers />
     </div>
   );

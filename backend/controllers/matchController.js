@@ -1,5 +1,7 @@
 const MenteeProfile = require('../models/MenteeProfile');
 const MentorProfile = require('../models/MentorProfile');
+const MentorNotification = require('../models/MentorNotifications'); // Make sure to import this
+
 exports.getMatchingMentors = async (req, res) => {
   try {
     const menteeId = req.user._id;
@@ -11,11 +13,9 @@ exports.getMatchingMentors = async (req, res) => {
       return res.status(404).json({ message: 'Mentee profile not found' });
     }
 
-    console.log('Found mentee profile:', mentee);
-
     const matchingMentors = await MentorProfile.find({
       subjectExpertise: { $in: mentee.interestedSubjects }
-    }).select('name subjectExpertise teachingLanguage highestDegree institute bio achievements');
+    }).select('user name subjectExpertise teachingLanguage highestDegree institute bio achievements');
 
     console.log(`Found ${matchingMentors.length} matching mentors`);
 

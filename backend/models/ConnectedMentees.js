@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
 
-const connectedMenteeSchema = new mongoose.Schema({
-  teacher: {
+const connectedMenteesSchema = new mongoose.Schema({
+  mentor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
     unique: true
   },
-  students: [{
+  mentees: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }]
 });
 
-const connectedMentee = mongoose.model('ConnectedMentee', connectedMenteeSchema);
+const ConnectedMentees = mongoose.model('ConnectedMentees', connectedMenteesSchema);
 
-module.exports = connectedMenteeSchema;
+module.exports = ConnectedMentees;

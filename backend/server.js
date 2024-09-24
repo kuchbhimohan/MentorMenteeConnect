@@ -8,7 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const mentorProfileRoutes = require('./routes/mentorProfileRoutes');
 const menteeProfileRoutes = require('./routes/menteeProfileRoutes');
 const matchRoutes = require('./routes/matchRoutes');
-const mentorConnectionRoutes = require('./routes/mentorConnectionRoutes');
+const connectedStudentsRoutes = require('./routes/connectedStudentsRoutes');
 
 const app = express();
 
@@ -29,7 +29,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/mentor/profile', mentorProfileRoutes);
 app.use('/api/mentee/profile', menteeProfileRoutes);
 app.use('/api/match', matchRoutes);
-app.use('/api/mentor-connections', mentorConnectionRoutes);
+const notificationRoutes = require('./routes/mentorNotificationRoutes');
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/connected-students', connectedStudentsRoutes);
 
 
 

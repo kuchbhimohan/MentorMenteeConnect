@@ -113,8 +113,30 @@ export const markNotificationAsRead = async (notificationId) => {
   return response.data;
 };
 
+
+export const getConnectedMentees = async () => {
+  const response = await api.get('/connected-students');
+  return response.data;
+};
+
 export const getConnectedMentors = async () => {
   const response = await api.get('/connected-mentors');
   return response.data;
 };
+
+export const getConversation = async (userId) => {
+  const response = await api.get(`/chat/conversation/${userId}`);
+  return response.data;
+};
+
+export const sendMessage = async (receiverId, message) => {
+  const response = await api.post('/chat/send', { receiver: receiverId, message });
+  return response.data;
+};
+
+export const deleteMessage = async (messageId) => {
+  const response = await api.delete(`/chat/message/${messageId}`);
+  return response.data;
+};
+
 export default api;

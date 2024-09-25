@@ -1,7 +1,8 @@
-// backend/server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require('http');
+const socketIo = require('socket.io');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
@@ -12,7 +13,16 @@ const connectedStudentsRoutes = require('./routes/connectedStudentsRoutes');
 const menteeNotificationRoutes = require('./routes/menteeNotificationRoutes');
 const notificationRoutes = require('./routes/mentorNotificationRoutes');
 const connectedMentorsRoutes = require('./routes/connectedMentorsRoutes');
+
+
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || 'http://localhost:3000', // Adjust this to your frontend URL
+    methods: ["GET", "POST"]
+  }
+});
 
 // Middleware
 app.use(cors());
@@ -36,7 +46,9 @@ app.use('/api/connected-students', connectedStudentsRoutes);
 app.use('/api/mentee-notifications', menteeNotificationRoutes);
 app.use('/api/connected-mentors', connectedMentorsRoutes);
 
+
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -13,6 +13,7 @@ import MentorCalendar from './components/dashboard/mentor_dashboard/Calendar';
 import Students from './components/dashboard/mentor_dashboard/Students';
 import MentorNotifications from './components/dashboard/mentor_dashboard/Notifications';
 import MentorUserProfile from './components/dashboard/mentor_dashboard/UserProfile';
+import MentorInbox from './components/dashboard/mentor_dashboard/Inbox';
 
 // Mentee components
 import MenteeStats from './components/dashboard/mentee_dashboard/MenteeStats';
@@ -20,6 +21,7 @@ import MenteeCalendar from './components/dashboard/mentee_dashboard/Calendar';
 import Teachers from './components/dashboard/mentee_dashboard/Teachers';
 import MenteeNotifications from './components/dashboard/mentee_dashboard/Notifications';
 import MenteeUserProfile from './components/dashboard/mentee_dashboard/UserProfile';
+import MenteeInbox from './components/dashboard/mentee_dashboard/Inbox';
 
 const AppRoutes = () => {
   return (
@@ -40,6 +42,7 @@ const AppRoutes = () => {
         <Route path="students" element={<Students />} />
         <Route path="notifications" element={<MentorNotifications />} />
         <Route path="userprofile" element={<MentorUserProfile />} />
+        <Route path="inbox" element={<MentorInbox />} />
       </Route>
       <Route 
         path="/mentee/dashboard"
@@ -54,6 +57,7 @@ const AppRoutes = () => {
         <Route path="teachers" element={<Teachers />} />
         <Route path="notifications" element={<MenteeNotifications />} />
         <Route path="userprofile" element={<MenteeUserProfile />} />
+        <Route path="inbox" element={<MenteeInbox />} />
       </Route>
     </Routes>
   );

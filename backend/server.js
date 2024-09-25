@@ -8,10 +8,10 @@ const authRoutes = require('./routes/authRoutes');
 const mentorProfileRoutes = require('./routes/mentorProfileRoutes');
 const menteeProfileRoutes = require('./routes/menteeProfileRoutes');
 const matchRoutes = require('./routes/matchRoutes');
-const connectedStudentsRoutes = require('./routes/connectedStudentsRoutes');
 const menteeNotificationRoutes = require('./routes/menteeNotificationRoutes');
 const notificationRoutes = require('./routes/mentorNotificationRoutes');
 const connectedMentorsRoutes = require('./routes/connectedMentorsRoutes');
+const connectedStudentsRoutes = require('./routes/connectedStudentsRoutes');
 const app = express();
 
 // Middleware

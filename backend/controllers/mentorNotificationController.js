@@ -86,6 +86,12 @@ exports.updateNotificationStatus = async (req, res) => {
         { upsert: true, new: true }
       );
 
+      const connectedMentees = await ConnectedMentees.findOneAndUpdate(
+        { mentor: notification.mentor },
+        { $addToSet: { mentees: notification.mentee } },
+        { upsert: true, new: true }
+      );
+
       // Create notification for mentee
       await MenteeNotification.create({
         mentor: notification.mentor,

@@ -1,3 +1,4 @@
+
 // src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import { loginUser, signupUser, logoutUser } from '../services/api';

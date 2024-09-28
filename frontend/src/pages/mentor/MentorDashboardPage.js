@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { FaCalendar, FaUsers, FaBell, FaUser, FaChartBar, FaSignOutAlt } from 'react-icons/fa';
+import { FaCalendar, FaUsers, FaBell, FaUser, FaChartBar, FaSignOutAlt, FaEnvelope } from 'react-icons/fa';
 import '../../styles/mentor_dashboard/MentorDashboard.css';
 
 const MentorDashboardPage = () => {
@@ -20,6 +20,7 @@ const MentorDashboardPage = () => {
     { name: 'Students', icon: <FaUsers />, path: '/mentor/dashboard/students' },
     { name: 'Notifications', icon: <FaBell />, path: '/mentor/dashboard/notifications' },
     { name: 'Profile', icon: <FaUser />, path: '/mentor/dashboard/userprofile' },
+    { name: 'Messages', icon: <FaEnvelope />, path: '/mentor/dashboard/messages' },
   ];
 
   const isActive = (path) => {

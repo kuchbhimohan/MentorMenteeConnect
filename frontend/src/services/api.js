@@ -118,4 +118,30 @@ export const getConnectedMentors = async () => {
   return response.data;
 };
 
+
+
+
+export const getMessages = async (userId, otherUserId) => {
+  try {
+    const response = await api.get(`/chat/${userId}/${otherUserId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching messages:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'An error occurred while fetching messages');
+  }
+};
+export const sendMessage = async (senderId, receiverId, content) => {
+  try {
+    const response = await api.post('/chat/send', { sender: senderId, receiver: receiverId, content });
+    return response.data;
+  } catch (error) {
+    console.error('Error sending message:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'An error occurred while sending the message');
+  }
+};
+
+
+
+
+
 export default api;

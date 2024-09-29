@@ -30,6 +30,12 @@ const io = socketIo(server, {
 app.use(cors());
 app.use(express.json());
 
+// Make io accessible to our routes
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,

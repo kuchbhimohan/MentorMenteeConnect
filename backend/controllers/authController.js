@@ -1,4 +1,3 @@
-// backend/controllers/authController.js
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
@@ -75,4 +74,14 @@ exports.login = async (req, res) => {
       message: err.message
     });
   }
+};
+
+exports.logout = (req, res) => {
+  // Clear the token (if you're using cookies)
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+
+  res.status(200).json({ status: 'success' });
 };

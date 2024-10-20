@@ -44,7 +44,7 @@ const Teachers = () => {
                 <p className="mentor-expertise">{mentor.subjectExpertise}</p>
                 <p className="mentor-bio">{mentor.bio}</p>
               </div>
-              <button className="contact-btn">Contact</button>
+              <button className="contact-btn" >Contact </button>
             </div>
           ))}
         </div>

@@ -1,30 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { AuthContext } from '../../../context/AuthContext';
 import { useSocket } from '../../../context/SocketContext';
-import { getConnectedStudents, getMessages } from '../../../services/api';
+import { getConnectedStudents, getMessages, sendMessage as apiSendMessage } from '../../../services/api';
 import UserList from './UserList';
 import ChatWindow from './ChatWindow';
 import styles from '../../../styles/mentor_dashboard/Messages.module.css';
 
 const Messages = () => {
   const { user } = useContext(AuthContext);
-  const socket = useSocket();
+  const { socket, joinChatRoom, leaveChatRoom, sendMessage } = useSocket();
   const [connectedStudents, setConnectedStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [chatWindows, setChatWindows] = useState({});
-
-  useEffect(() => {
-    fetchConnectedStudents();
-    if (socket) {
-      socket.emit('join', user.id);
-      socket.on('newMessage', handleNewMessage);
-    }
-    return () => {
-      if (socket) {
-        socket.off('newMessage', handleNewMessage);
-      }
-    };
-  }, [socket, user.id]);
 
   const fetchConnectedStudents = async () => {
     try {
@@ -47,7 +34,41 @@ const Messages = () => {
     }
   };
 
+  const updateMessages = useCallback((message) => {
+    const relevantUserId = message.sender === user.id ? message.receiver : message.sender;
+    setChatWindows(prev => {
+      const existingMessages = prev[relevantUserId]?.messages || [];
+      const isNewMessage = !existingMessages.some(m => m._id === message._id);
+      if (isNewMessage) {
+        return {
+          ...prev,
+          [relevantUserId]: {
+            ...prev[relevantUserId],
+            messages: [...existingMessages, message]
+          }
+        };
+      }
+      return prev;
+    });
+  }, [user.id]);
+
+  useEffect(() => {
+    fetchConnectedStudents();
+    if (socket) {
+      socket.on('newMessage', updateMessages);
+    }
+    return () => {
+      if (socket) {
+        socket.off('newMessage', updateMessages);
+      }
+    };
+  }, [socket, updateMessages]);
+
   const handleSelectStudent = (student) => {
+    if (selectedStudent) {
+      const prevRoomId = [user.id, selectedStudent._id].sort().join('-');
+      leaveChatRoom(prevRoomId);
+    }
     setSelectedStudent(student);
     if (!chatWindows[student._id]) {
       setChatWindows(prev => ({
@@ -56,42 +77,27 @@ const Messages = () => {
       }));
       fetchMessages(student._id);
     }
+    const newRoomId = [user.id, student._id].sort().join('-');
+    joinChatRoom(newRoomId);
   };
 
-  const handleSendMessage = (content) => {
+  const handleSendMessage = async (content) => {
     if (selectedStudent) {
-      socket.emit('sendMessage', {
-        sender: user.id,
-        receiver: selectedStudent._id,
-        content
-      });
-      // Optimistically add the message to the chat window
-      const newMessage = {
+      const roomId = [user.id, selectedStudent._id].sort().join('-');
+      const messageData = {
         sender: user.id,
         receiver: selectedStudent._id,
         content,
         timestamp: new Date().toISOString()
       };
-      setChatWindows(prev => ({
-        ...prev,
-        [selectedStudent._id]: {
-          ...prev[selectedStudent._id],
-          messages: [...prev[selectedStudent._id].messages, newMessage],
-          inputValue: ''
-        }
-      }));
-    }
-  };
-
-  const handleNewMessage = (message) => {
-    const relevantUserId = message.sender === user.id ? message.receiver : message.sender;
-    setChatWindows(prev => ({
-      ...prev,
-      [relevantUserId]: {
-        ...prev[relevantUserId],
-        messages: [...(prev[relevantUserId]?.messages || []), message]
+      try {
+        const sentMessage = await apiSendMessage(messageData);
+        sendMessage(roomId, sentMessage);
+        updateMessages(sentMessage);
+      } catch (error) {
+        console.error('Error sending message:', error);
       }
-    }));
+    }
   };
 
   const handleInputChange = (studentId, value) => {

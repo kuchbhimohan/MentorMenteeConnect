@@ -14,6 +14,7 @@ import Students from './components/dashboard/mentor_dashboard/Students';
 import MentorNotifications from './components/dashboard/mentor_dashboard/Notifications';
 import MentorUserProfile from './components/dashboard/mentor_dashboard/UserProfile';
 import MentorMessages from './components/dashboard/mentor_dashboard/Messages';
+import MentorClasses from './components/dashboard/mentor_dashboard/MentorClasses';
 
 // Mentee components
 import MenteeStats from './components/dashboard/mentee_dashboard/MenteeStats';
@@ -22,6 +23,7 @@ import Teachers from './components/dashboard/mentee_dashboard/Teachers';
 import MenteeNotifications from './components/dashboard/mentee_dashboard/Notifications';
 import MenteeUserProfile from './components/dashboard/mentee_dashboard/UserProfile';
 import MenteeMessages from './components/dashboard/mentee_dashboard/Messages';
+import MenteeClasses from './components/dashboard/mentee_dashboard/MenteeClasses';
 
 const AppRoutes = () => {
   return (
@@ -43,21 +45,23 @@ const AppRoutes = () => {
         <Route path="notifications" element={<MentorNotifications />} />
         <Route path="userprofile" element={<MentorUserProfile />} />
         <Route path="messages" element={<MentorMessages />} />
+        <Route path="classes" element={<MentorClasses />} />
       </Route>
       <Route 
         path="/mentee/dashboard"
         element={
           <ProtectedRoute allowedRole="mentee">
-            <MenteeDashboardPage/>
+            <MenteeDashboardPage />
           </ProtectedRoute>
         }
       >
-        <Route index element={<MenteeStats/>} />
+        <Route index element={<MenteeStats />} />
         <Route path="calendar" element={<MenteeCalendar />} />
         <Route path="teachers" element={<Teachers />} />
         <Route path="notifications" element={<MenteeNotifications />} />
         <Route path="userprofile" element={<MenteeUserProfile />} />
         <Route path="messages" element={<MenteeMessages />} />
+        <Route path="classes" element={<MenteeClasses />} />
       </Route>
     </Routes>
   );

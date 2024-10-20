@@ -1,5 +1,3 @@
-
-// src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import { loginUser, signupUser, logoutUser } from '../services/api';
 
@@ -47,15 +45,19 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await logoutUser();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
       setUser(null);
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Even if the server-side logout fails, we should still clear the local state
+      setUser(null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      // You might want to show an error message to the user here
     }
   };
-
+  
   const updateUserState = (updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -72,7 +74,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

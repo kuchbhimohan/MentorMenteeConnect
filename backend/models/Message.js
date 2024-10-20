@@ -15,10 +15,16 @@ const messageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  roomId: {
+    type: String,
+    required: true
+  },
   timestamp: {
     type: Date,
     default: Date.now
   }
 });
 
-module.exports = mongoose.model('Message', messageSchema);
+const Message = mongoose.model('Message', messageSchema);
+
+module.exports = Message;

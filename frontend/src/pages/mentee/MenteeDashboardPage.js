@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { FaCalendar, FaUsers, FaBell, FaUser, FaChartBar, FaSignOutAlt, FaEnvelope } from 'react-icons/fa';
+import { FaCalendar, FaUsers, FaBell, FaUser, FaChartBar, FaSignOutAlt, FaEnvelope, FaVideo } from 'react-icons/fa';
 import '../../styles/mentee_dashboard/MenteeDashboard.css';
 
 const MenteeDashboardPage = () => {
@@ -21,6 +21,7 @@ const MenteeDashboardPage = () => {
     { name: 'Profile', icon: <FaUser />, path: '/mentee/dashboard/userprofile' },
     { name: 'Teachers', icon: <FaUsers />, path: '/mentee/dashboard/teachers' },
     { name: 'Messages', icon: <FaEnvelope />, path: '/mentee/dashboard/messages' },
+    {name:'Classes', path:'classes'}
   ];
 
   const isActive = (path) => {

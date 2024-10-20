@@ -4,11 +4,12 @@ const chatController = {
   sendMessage: async (req, res) => {
     try {
       const { sender, receiver, content } = req.body;
-      const newMessage = new Message({ sender, receiver, content });
+      const roomId = [sender, receiver].sort().join('-');
+      const newMessage = new Message({ sender, receiver, content, roomId });
       await newMessage.save();
       
-      // Emit the new message to both sender and receiver
-      req.io.to(sender).to(receiver).emit('newMessage', newMessage);
+      // Emit the new message to the room
+      req.io.to(roomId).emit('newMessage', newMessage);
       
       res.status(201).json(newMessage);
     } catch (error) {
@@ -20,12 +21,8 @@ const chatController = {
   getMessages: async (req, res) => {
     try {
       const { userId, otherUserId } = req.params;
-      const messages = await Message.find({
-        $or: [
-          { sender: userId, receiver: otherUserId },
-          { sender: otherUserId, receiver: userId }
-        ]
-      }).sort({ timestamp: 1 });
+      const roomId = [userId, otherUserId].sort().join('-');
+      const messages = await Message.find({ roomId }).sort({ timestamp: 1 });
       res.status(200).json(messages);
     } catch (error) {
       console.error('Error fetching messages:', error);

@@ -14,6 +14,12 @@ const notificationRoutes = require('./routes/mentorNotificationRoutes');
 const connectedMentorsRoutes = require('./routes/connectedMentorsRoutes');
 const connectedStudentsRoutes = require('./routes/connectedStudentsRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const upcomingClassesRoutes = require('./routes/upComingClassRoutes');
+const menteeScheduledClassesRoutes = require('./routes/menteeScheduledClassesRoutes');
+
+// ... other middleware and configurations
+
+// Use routes
 
 const Message = require('./models/Message');
 
@@ -21,7 +27,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000", // Adjust this to match your frontend URL
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"]
   }
 });
@@ -45,6 +51,11 @@ mongoose.connect(process.env.MONGODB_URI, {
 .catch((err) => console.error('Could not connect to MongoDB', err));
 
 // Routes
+
+
+// Add this line where you're setting up your routes
+app.use('/api/mentee', menteeScheduledClassesRoutes);
+app.use('/api/upcoming-classes', upcomingClassesRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/mentor/profile', mentorProfileRoutes);
 app.use('/api/mentee/profile', menteeProfileRoutes);
@@ -61,43 +72,49 @@ io.on('connection', (socket) => {
 
   socket.on('join', (userId) => {
     socket.join(userId);
-    console.log(`User ${userId} joined`);
+    console.log(`User ${userId} joined their personal room`);
   });
 
-  socket.on('sendMessage', async ({ sender, receiver, content }) => {
-    try {
-      const newMessage = new Message({ sender, receiver, content });
-      await newMessage.save();
-      
-      console.log(`Message sent from ${sender} to ${receiver}: ${content}`);
-      
-      // Emit to both sender and receiver
-      io.to(receiver).emit('newMessage', newMessage);
-      io.to(sender).emit('messageSent', newMessage);
-    } catch (error) {
-      console.error('Error saving message:', error);
-      socket.emit('messageError', { error: 'Failed to send message' });
-    }
+  socket.on('join-chat-room', (roomId) => {
+    socket.join(roomId);
+    console.log(`User joined chat room: ${roomId}`);
   });
 
-  socket.on('getMessages', async ({ userId, otherUserId }) => {
-    try {
-      const messages = await Message.find({
-        $or: [
-          { sender: userId, receiver: otherUserId },
-          { sender: otherUserId, receiver: userId }
-        ]
-      }).sort({ timestamp: 1 });
-      
-      socket.emit('messageHistory', messages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      socket.emit('messageError', { error: 'Failed to fetch messages' });
-    }
+  socket.on('leave-chat-room', (roomId) => {
+    socket.leave(roomId);
+    console.log(`User left chat room: ${roomId}`);
+  });
+
+  // Video call related events (unchanged)
+  socket.on('create-room', (roomId) => {
+    socket.join(roomId);
+    console.log(`Video call room created: ${roomId}`);
+  });
+
+  socket.on('join-room', (roomId) => {
+    socket.join(roomId);
+    socket.to(roomId).emit('user-connected');
+    console.log(`User joined video call room: ${roomId}`);
+  });
+
+  socket.on('offer', ({ offer, roomId }) => {
+    socket.to(roomId).emit('offer', { offer });
+  });
+
+  socket.on('answer', ({ answer, roomId }) => {
+    socket.to(roomId).emit('answer', { answer });
+  });
+
+  socket.on('ice-candidate', ({ candidate, roomId }) => {
+    socket.to(roomId).emit('ice-candidate', { candidate });
   });
 
   socket.on('disconnect', () => {
     console.log('Client disconnected');
+  });
+
+  socket.on('end-call', ({ roomId }) => {
+    io.to(roomId).emit('call-ended');
   });
 });
 
@@ -105,3 +122,5 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+

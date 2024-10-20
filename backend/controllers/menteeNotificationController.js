@@ -25,7 +25,6 @@ exports.getMenteeNotifications = async (req, res) => {
   }
 };
 
-// Optionally, you can add a function to mark a notification as read/inactive
 exports.markNotificationAsRead = async (req, res) => {
   try {
     const { notificationId } = req.params;
@@ -54,6 +53,44 @@ exports.markNotificationAsRead = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error marking notification as read',
+      error: error.message
+    });
+  }
+};
+
+// New function to create a notification
+exports.createMenteeNotification = async (req, res) => {
+  try {
+    const { mentee, message } = req.body;
+    const mentor = req.user._id; // Assuming the mentor is the authenticated user creating the notification
+
+    // Validate input
+    if (!mentee || !message) {
+      return res.status(400).json({
+        success: false,
+        message: 'Mentee ID and message are required'
+      });
+    }
+
+    const newNotification = new MenteeNotification({
+      mentor,
+      mentee,
+      message,
+      activeNotification: true
+    });
+
+    await newNotification.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Notification created successfully',
+      notification: newNotification
+    });
+  } catch (error) {
+    console.error('Error creating mentee notification:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error creating notification',
       error: error.message
     });
   }

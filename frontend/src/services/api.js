@@ -39,8 +39,13 @@ export const signupUser = async (name, username, email, password, role) => {
 };
 
 export const logoutUser = async () => {
-  const response = await api.post('/auth/logout');
-  return response.data;
+  try {
+    const response = await api.post('/auth/logout');
+    return response.data;
+  } catch (error) {
+    console.error('Logout error:', error);
+    throw error;
+  }
 };
 
 export const createMentorProfile = async (profileData) => {
@@ -118,9 +123,32 @@ export const getConnectedMentors = async () => {
   return response.data;
 };
 
+export const getConnectedMentorsAndClasses = async () => {
+  try {
+    const response = await api.get('/mentee/mentors-and-classes');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching connected mentors and classes:', error);
+    throw error;
+  }
+};
 
+export const scheduleClass = async (classData) => {
+  const response = await api.post('/upcoming-classes/schedule', classData);
+  return response.data;
+};
 
+export const getUpcomingClasses = async () => {
+  const response = await api.get('/upcoming-classes');
+  return response.data;
+};
 
+export const deleteClass = async (classId) => {
+  const response = await api.delete(`/upcoming-classes/${classId}`);
+  return response.data;
+};
+
+// Updated chat-related functions
 export const getMessages = async (userId, otherUserId) => {
   try {
     const response = await api.get(`/chat/${userId}/${otherUserId}`);
@@ -130,9 +158,10 @@ export const getMessages = async (userId, otherUserId) => {
     throw new Error(error.response?.data?.message || 'An error occurred while fetching messages');
   }
 };
-export const sendMessage = async (senderId, receiverId, content) => {
+
+export const sendMessage = async (messageData) => {
   try {
-    const response = await api.post('/chat/send', { sender: senderId, receiver: receiverId, content });
+    const response = await api.post('/chat/send', messageData);
     return response.data;
   } catch (error) {
     console.error('Error sending message:', error.response?.data || error.message);
@@ -140,8 +169,18 @@ export const sendMessage = async (senderId, receiverId, content) => {
   }
 };
 
-
-
-
+export const createMenteeNotification = async (menteeId, message) => {
+  try {
+    const response = await api.post('/mentee-notifications', {
+      mentee: menteeId,
+      message: message,
+      activeNotification: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating mentee notification:', error);
+    throw error;
+  }
+};
 
 export default api;

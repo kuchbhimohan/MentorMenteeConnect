@@ -1,14 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --background-primary: #121212;
+  --background-secondary: #1e1e1e;
+  --background-tertiary: #2a2a2a;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --accent-color: #007bff;
+  --accent-hover: #0056b3;
+  --border-color: #333333;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --message-sent: #0084ff;
+  --message-received: #303030;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
 .messagesContainer {
   display: flex;
-  height: calc(100vh - 60px); /* Adjust based on your header height */
-  background-color: #1e1e1e;
-  color: #ffffff;
+  height: calc(100vh - 60px);
+  background-color: var(--background-primary);
+  overflow: hidden;
 }
 
 .userList {
   width: 300px;
-  border-right: 1px solid #333;
-  background-color: #1e1e1e;
+  background-color: var(--background-secondary);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
 }
@@ -16,9 +38,10 @@
 .userListTitle {
   padding: 20px;
   font-size: 1.2rem;
-  border-bottom: 1px solid #333;
-  color: #fff;
+  font-weight: 600;
   text-align: center;
+  background-color: var(--background-tertiary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .userListScroll {
@@ -31,15 +54,12 @@
   align-items: center;
   padding: 15px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  border-radius: 8px;
-  margin: 10px 15px;
+  transition: all 0.3s ease;
 }
 
 .userItem:hover,
 .userItem.selected {
-  background-color: #2a2a2a;
-  transform: scale(1.02);
+  background-color: var(--background-tertiary);
 }
 
 .userAvatar {
@@ -47,36 +67,33 @@
   height: 40px;
   border-radius: 50%;
   margin-right: 15px;
-  border: 2px solid #333;
-}
-
-.userInfo {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  object-fit: cover;
+  border: 2px solid var(--accent-color);
 }
 
 .userName {
-  font-weight: bold;
-  color: #fff;
+  font-weight: 500;
+  margin-bottom: 3px;
 }
 
 .userEmail {
   font-size: 0.8rem;
-  color: #999;
+  color: var(--text-secondary);
 }
 
 .chatWindow {
-  flex: 1;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
+  background-color: var(--background-primary);
 }
 
 .chatHeader {
   display: flex;
   align-items: center;
-  padding: 15px;
-  background-color: #2a2a2a;
+  padding: 15px 20px;
+  background-color: var(--background-tertiary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .chatUserAvatar {
@@ -84,54 +101,55 @@
   height: 40px;
   border-radius: 50%;
   margin-right: 15px;
+  object-fit: cover;
 }
 
 .chatUserName {
-  font-weight: bold;
-  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
 .chatMessages {
-  flex: 1;
+  flex-grow: 1;
   overflow-y: auto;
   padding: 20px;
-  background-color: #1e1e1e;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Sender (right) and Receiver (left) styling */
 .message {
   max-width: 70%;
   margin-bottom: 15px;
-  padding: 12px 20px;
-  border-radius: 20px;
+  padding: 10px 15px;
+  border-radius: 18px;
   position: relative;
+  line-height: 1.4;
   word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .sent {
   align-self: flex-end;
-  background-color: #0078ff;
+  background-color: var(--message-sent);
   color: white;
-  margin-left: auto;
-  border-bottom-right-radius: 0;
+  border-bottom-right-radius: 4px;
 }
 
 .received {
   align-self: flex-start;
-  background-color: #333;
-  color: white;
-  margin-right: auto;
-  border-bottom-left-radius: 0;
+  background-color: var(--message-received);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
 }
 
 .messageContent {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .messageTime {
   font-size: 0.7rem;
-  color: #999;
+  color: rgba(255, 255, 255, 0.7);
   margin-top: 5px;
   text-align: right;
 }
@@ -139,27 +157,91 @@
 .chatInputArea {
   display: flex;
   padding: 15px;
-  background-color: #2a2a2a;
-  border-top: 1px solid #333;
+  background-color: var(--background-tertiary);
+  border-top: 1px solid var(--border-color);
 }
 
 .chatInput {
-  flex: 1;
-  padding: 12px;
+  flex-grow: 1;
+  padding: 10px 15px;
   border: none;
-  border-radius: 25px;
-  background-color: #333;
-  color: #fff;
-  font-size: 1rem;
+  border-radius: 20px;
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.chatInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-color);
 }
 
 .sendButton {
   margin-left: 10px;
-  padding: 12px 25px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 25px;
-  background-color: #0078ff;
+  border-radius: 20px;
+  background-color: var(--accent-color);
   color: white;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.sendButton:hover {
+  background-color: var(--accent-hover);
+}
+
+/* Scrollbar styling */
+.userListScroll::-webkit-scrollbar,
+.chatMessages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.userListScroll::-webkit-scrollbar-thumb,
+.chatMessages::-webkit-scrollbar-thumb {
+  background-color: var(--background-tertiary);
+  border-radius: 3px;
+}
+
+.userListScroll::-webkit-scrollbar-track,
+.chatMessages::-webkit-scrollbar-track {
+  background-color: var(--background-secondary);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .userList {
+    position: absolute;
+    left: -300px;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    transition: left 0.3s ease;
+  }
+
+  .userList.active {
+    left: 0;
+  }
+
+  .chatWindow {
+    width: 100%;
+  }
+}
+
+/* Animation for new messages */
+@keyframes messageAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message {
+  animation: messageAppear 0.3s ease-out;
 }
